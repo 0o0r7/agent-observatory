@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: agent-observatory-dev
+    working_dir: /workspace
+    volumes:
+      - ../:/workspace
+      - dev_data:/root
+    ports:
+      - "3000:3000"  # Next.js studio
+      - "5173:5173"  # Vite dev server
+      - "8545:8545"  # Anvil (Foundry local node)
+    environment:
+      - RPC_URL=https://rpc.testnet.chain.robinhood.com
+      - CHAIN_ID=46630
+      - BLOCKSCOUT_API_URL=https://explorer.testnet.chain.robinhood.com/api
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
+
+volumes:
+  dev_data:
+    driver: local
